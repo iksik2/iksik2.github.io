@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Odliczanie dni szkolnych</title>
+	<style>
+		body {
+			background-color: #fff;
+			color: #000;
+			font-family: Arial, sans-serif;
+			text-align: center;
+			transition: background-color 5s ease;
+		}
+
+		h1 {
+			font-size: 2em;
+			margin-top: 50px;
+		}
+
+		h2 {
+			font-size: 1.5em;
+			margin-top: 20px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Odliczanie dni szkolnych</h1>
+	<h2 id="countdown"></h2>
+
+	<script>
+		// ustaw datę końcową odliczania
+		var endDate = new Date("2023-06-23");
+
+		// dni wolne od szkoły
+		var freeDays = [
+			"2023-05-01", // święto państwowe
+			"2023-05-03", // święto państwowe
+			"2023-06-08", // święto państwowe
+			"2023-06-09", // dzień wolny
+			"2023-06-15", // dzień wolny
+			"2023-06-16", // dzień wolny
+			"2023-06-19", // egzamin ósmoklasisty
+			"2023-06-20", // egzamin ósmoklasisty
+			"2023-06-21"  // egzamin ósmoklasisty
+		];
+
+		// funkcja obliczająca czas pozostały do daty końcowej
+		function getTimeRemaining(endTime) {
+			var total = Date.parse(endTime) - Date.parse(new Date());
+			var days = Math.floor(total / (1000 * 60 * 60 * 24));
+
+			// odliczanie dni wolnych od szkoły
+			for (var i = 0; i < freeDays.length; i++) {
+				if (Date.parse(freeDays[i]) >= Date.parse(new Date()) && Date.parse(freeDays[i]) <= Date.parse(endTime)) {
+					days--;
+				}
+			}
+
+			// odliczanie weekendów
+			var weekends = Math.floor(days / 7);
+			days -= weekends * 2;
+
+			return {
+				'total': total,
+				'days': days
+			};
+		}
+
+		// funkcja aktualizująca odliczanie co sekundę
+		function updateClock() {
+			var t = getTimeRemaining(endDate);
+
+			document.getElementById('countdown').innerHTML = 'Do końca roku szkolnego pozostało ' + t.days + ' dni szkolnych.';
+
+			// powolna zmiana koloru tła
+			var r = Math.floor(256*Math.random());
+			var g = Math.floor(256*Math.random());
+			var b = Math.floor(256*Math.random());
+			document.body.style.backgroundColor = "rgb(" + r + "," + g + "," + b + ")";
+
+			
+		// odświeżanie co sekundę
+		if (t.total <= 0) {
+			clearInterval(timeinterval);
+		}
+	}
+
+	// uruchomienie odliczania i aktualizacja co sekundę
+	updateClock();
+	var timeinterval = setInterval(updateClock, 1000);
+</script>
+
+<p>&copy; xLegez 2023</p>
